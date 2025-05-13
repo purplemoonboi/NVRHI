@@ -89,6 +89,7 @@ namespace nvrhi::vulkan
             { VK_KHR_SYNCHRONIZATION_2_EXTENSION_NAME, &m_Context.extensions.KHR_synchronization2 },
             { VK_NV_MESH_SHADER_EXTENSION_NAME, &m_Context.extensions.NV_mesh_shader },
             { VK_NV_RAY_TRACING_INVOCATION_REORDER_EXTENSION_NAME, &m_Context.extensions.NV_ray_tracing_invocation_reorder },
+            { VK_NV_CLUSTER_ACCELERATION_STRUCTURE_EXTENSION_NAME, &m_Context.extensions.NV_cluster_acceleration_structure },
 #if NVRHI_WITH_AFTERMATH
             { VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME, &m_Context.extensions.NV_device_diagnostic_checkpoints },
             { VK_NV_DEVICE_DIAGNOSTICS_CONFIG_EXTENSION_NAME, &m_Context.extensions.NV_device_diagnostics_config }
@@ -126,6 +127,7 @@ namespace nvrhi::vulkan
         vk::PhysicalDeviceOpacityMicromapPropertiesEXT opacityMicromapProperties;
         vk::PhysicalDeviceRayTracingInvocationReorderPropertiesNV nvRayTracingInvocationReorderProperties;
         vk::PhysicalDeviceSubgroupProperties subgroupProperties;
+        vk::PhysicalDeviceClusterAccelerationStructurePropertiesNV nvClusterAccelerationStructureProperties;
         
         vk::PhysicalDeviceProperties2 deviceProperties2;
 
@@ -169,6 +171,12 @@ namespace nvrhi::vulkan
             pNext = &nvRayTracingInvocationReorderProperties;
         }
 
+        if (m_Context.extensions.NV_cluster_acceleration_structure)
+        {
+            nvClusterAccelerationStructureProperties.pNext = pNext;
+            pNext = &nvClusterAccelerationStructureProperties;
+        }
+
         deviceProperties2.pNext = pNext;
 
         m_Context.physicalDevice.getProperties2(&deviceProperties2);
@@ -181,6 +189,7 @@ namespace nvrhi::vulkan
         m_Context.opacityMicromapProperties = opacityMicromapProperties;
         m_Context.nvRayTracingInvocationReorderProperties = nvRayTracingInvocationReorderProperties;
         m_Context.subgroupProperties = subgroupProperties;
+        m_Context.nvClusterAccelerationStructureProperties = nvClusterAccelerationStructureProperties;
         m_Context.messageCallback = desc.errorCB;
 
         if (m_Context.extensions.EXT_opacity_micromap && !m_Context.extensions.KHR_synchronization2)
@@ -333,6 +342,8 @@ namespace nvrhi::vulkan
             }
             return false;
         }
+        case Feature::RayTracingClusters:
+            return m_Context.extensions.NV_cluster_acceleration_structure;
         case Feature::ShaderSpecializations:
             return true;
         case Feature::Meshlets:
@@ -376,6 +387,8 @@ namespace nvrhi::vulkan
                     utils::NotSupported();
             }
             return true;
+        case Feature::HeapDirectlyIndexed:
+            return true; // REVISIT
         default:
             return false;
         }

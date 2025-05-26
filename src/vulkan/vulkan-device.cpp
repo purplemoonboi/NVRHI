@@ -191,6 +191,7 @@ namespace nvrhi::vulkan
         m_Context.subgroupProperties = subgroupProperties;
         m_Context.nvClusterAccelerationStructureProperties = nvClusterAccelerationStructureProperties;
         m_Context.messageCallback = desc.errorCB;
+        m_Context.logBufferLifetime = desc.logBufferLifetime;
 
         if (m_Context.extensions.EXT_opacity_micromap && !m_Context.extensions.KHR_synchronization2)
         {
@@ -684,5 +685,10 @@ namespace nvrhi::vulkan
     void VulkanContext::warning(const std::string& message) const
     {
         messageCallback->message(MessageSeverity::Warning, message.c_str());
+    }
+
+    void VulkanContext::info(const std::string& message) const
+    {
+        messageCallback->message(MessageSeverity::Info, message.c_str());
     }
 } // namespace nvrhi::vulkan

@@ -192,6 +192,7 @@ namespace nvrhi::vulkan
         vk::PhysicalDeviceSubgroupProperties subgroupProperties;
         vk::PhysicalDeviceClusterAccelerationStructurePropertiesNV nvClusterAccelerationStructureProperties;
         IMessageCallback* messageCallback = nullptr;
+        bool logBufferLifetime = false;
 #ifdef NVRHI_WITH_RTXMU
         std::unique_ptr<rtxmu::VkAccelStructManager> rtxMemUtil;
         std::unique_ptr<RtxMuResources> rtxMuResources;
@@ -202,6 +203,7 @@ namespace nvrhi::vulkan
             const vk::DebugReportObjectTypeEXT objtypeEXT, const char* name) const;
         void error(const std::string& message) const;
         void warning(const std::string& message) const;
+        void info(const std::string& message) const;
     };
 
     // command buffer with resource tracking

@@ -1173,6 +1173,11 @@ namespace nvrhi::vulkan
             const FramebufferDesc& desc, bool transferOwnership) override;
 
     private:
+        // Warning m_AftermathCrashDump helper must be first due to reverse destruction order
+        // Queues will destroy CommandLists which will unregister from m_AftermathCrashDumpHelper in their deconstructors
+        bool m_AftermathEnabled = false;
+        AftermathCrashDumpHelper m_AftermathCrashDumpHelper;
+
         VulkanContext m_Context;
         VulkanAllocator m_Allocator;
         
@@ -1185,8 +1190,6 @@ namespace nvrhi::vulkan
         std::array<std::unique_ptr<Queue>, uint32_t(CommandQueue::Count)> m_Queues;
         
         void *mapBuffer(IBuffer* b, CpuAccessMode flags, uint64_t offset, size_t size) const;
-        bool m_AftermathEnabled = false;
-        AftermathCrashDumpHelper m_AftermathCrashDumpHelper;
     };
 
     class CommandList : public RefCounter<ICommandList>

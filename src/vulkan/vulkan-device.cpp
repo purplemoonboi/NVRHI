@@ -90,6 +90,7 @@ namespace nvrhi::vulkan
             { VK_NV_MESH_SHADER_EXTENSION_NAME, &m_Context.extensions.NV_mesh_shader },
             { VK_NV_RAY_TRACING_INVOCATION_REORDER_EXTENSION_NAME, &m_Context.extensions.NV_ray_tracing_invocation_reorder },
             { VK_NV_CLUSTER_ACCELERATION_STRUCTURE_EXTENSION_NAME, &m_Context.extensions.NV_cluster_acceleration_structure },
+            { VK_EXT_MUTABLE_DESCRIPTOR_TYPE_EXTENSION_NAME, &m_Context.extensions.EXT_mutable_descriptor_type },
 #if NVRHI_WITH_AFTERMATH
             { VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME, &m_Context.extensions.NV_device_diagnostic_checkpoints },
             { VK_NV_DEVICE_DIAGNOSTICS_CONFIG_EXTENSION_NAME, &m_Context.extensions.NV_device_diagnostics_config }
@@ -389,7 +390,7 @@ namespace nvrhi::vulkan
             }
             return true;
         case Feature::HeapDirectlyIndexed:
-            return true; // REVISIT
+            return m_Context.extensions.EXT_mutable_descriptor_type;
         default:
             return false;
         }

@@ -929,8 +929,12 @@ namespace nvrhi::vulkan
             operationFlags |= vk::BuildAccelerationStructureFlagBitsKHR::ePreferFastTrace;
         if ((desc.params.flags & rt::cluster::OperationFlags::FastBuild) != 0)
             operationFlags |= vk::BuildAccelerationStructureFlagBitsKHR::ePreferFastBuild;
+        
+        // calhsu TODO: Double check if this is correct
+        // No equivalent to NVAPI_D3D12_RAYTRACING_MULTI_INDIRECT_CLUSTER_OPERATION_FLAG_NO_OVERLAP
         if ((desc.params.flags & rt::cluster::OperationFlags::NoOverlap) != 0)
-            operationFlags |= vk::BuildAccelerationStructureFlagBitsKHR::eAllowCompaction; // Note: No direct equivalent, using ALLOW_COMPACTION as closest match
+            operationFlags |= vk::BuildAccelerationStructureFlagBitsKHR::eAllowCompaction; 
+
         if ((desc.params.flags & rt::cluster::OperationFlags::AllowOMM) != 0)
             operationFlags |= vk::BuildAccelerationStructureFlagBitsKHR::eAllowOpacityMicromapUpdateEXT;
 
@@ -1029,7 +1033,7 @@ namespace nvrhi::vulkan
         if (desc.scratchSizeInBytes > 0)
         {
             if (!m_ScratchManager->suballocateBuffer(desc.scratchSizeInBytes, &scratchBuffer, &scratchOffset, nullptr,
-                currentVersion, m_Context.accelStructProperties.minAccelerationStructureScratchOffsetAlignment))
+                currentVersion, m_Context.nvClusterAccelerationStructureProperties.clusterScratchByteAlignment))
             {
                 std::stringstream ss;
                 ss << "Couldn't suballocate a scratch buffer for cluster operation. "

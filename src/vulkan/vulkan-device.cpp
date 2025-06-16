@@ -127,8 +127,8 @@ namespace nvrhi::vulkan
         vk::PhysicalDeviceFragmentShadingRatePropertiesKHR shadingRateProperties;
         vk::PhysicalDeviceOpacityMicromapPropertiesEXT opacityMicromapProperties;
         vk::PhysicalDeviceRayTracingInvocationReorderPropertiesNV nvRayTracingInvocationReorderProperties;
-        vk::PhysicalDeviceSubgroupProperties subgroupProperties;
         vk::PhysicalDeviceClusterAccelerationStructurePropertiesNV nvClusterAccelerationStructureProperties;
+        vk::PhysicalDeviceSubgroupProperties subgroupProperties;
         
         vk::PhysicalDeviceProperties2 deviceProperties2;
 

@@ -189,9 +189,9 @@ namespace nvrhi::vulkan
         vk::PhysicalDeviceFragmentShadingRatePropertiesKHR shadingRateProperties;
         vk::PhysicalDeviceOpacityMicromapPropertiesEXT opacityMicromapProperties;
         vk::PhysicalDeviceRayTracingInvocationReorderPropertiesNV nvRayTracingInvocationReorderProperties;
+        vk::PhysicalDeviceClusterAccelerationStructurePropertiesNV nvClusterAccelerationStructureProperties;
         vk::PhysicalDeviceFragmentShadingRateFeaturesKHR shadingRateFeatures;
         vk::PhysicalDeviceSubgroupProperties subgroupProperties;
-        vk::PhysicalDeviceClusterAccelerationStructurePropertiesNV nvClusterAccelerationStructureProperties;
         IMessageCallback* messageCallback = nullptr;
         bool logBufferLifetime = false;
 #ifdef NVRHI_WITH_RTXMU

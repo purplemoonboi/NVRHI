@@ -1409,6 +1409,9 @@ namespace nvrhi::validation
                 case ResourceType::RayTracingAccelStruct:
                     errorStream << "ResourceType::RayTracingAccelStruct is not allowed for bindless layouts with LayoutType::MutableSrvUavCbv." << std::endl;
                     return false;
+                default:
+                    // Invalid resource types will be dealt with later in this function.
+                    break;
                 }
             }
             else if (pBindlessLayoutDesc->layoutType == BindlessLayoutDesc::LayoutType::MutableCounters)

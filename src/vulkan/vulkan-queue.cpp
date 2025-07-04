@@ -191,7 +191,22 @@ namespace nvrhi::vulkan
         std::vector<vk::SparseImageMemoryBind> sparseImageMemoryBinds;
         std::vector<vk::SparseMemoryBind> sparseMemoryBinds;
 
-		vk::ImageAspectFlags textureAspectFlags = guessImageAspectFlags(texture->imageInfo.format);
+        vk::ImageCreateInfo& imageInfo = texture->imageInfo;
+		vk::ImageAspectFlags textureAspectFlags = guessImageAspectFlags(imageInfo.format);
+
+		// Required for extent and offset since they must be multiples of the tile dimensions
+		uint32_t tileWidth = 1;
+		uint32_t tileHeight = 1;
+		uint32_t tileDepth = 1;
+
+        std::vector<vk::SparseImageFormatProperties> formatProperties = m_Context.physicalDevice.getSparseImageFormatProperties(imageInfo.format, imageInfo.imageType, imageInfo.samples, imageInfo.usage, imageInfo.tiling);
+
+		if (!formatProperties.empty())
+		{
+			tileWidth = formatProperties[0].imageGranularity.width;
+			tileHeight = formatProperties[0].imageGranularity.height;
+			tileDepth = formatProperties[0].imageGranularity.depth;
+		}
 
         for (size_t i = 0; i < numTileMappings; i++)
         {
@@ -217,17 +232,17 @@ namespace nvrhi::vulkan
                     vk::ImageSubresource subresource = {};
                     subresource.arrayLayer = tiledTextureCoordinate.arrayLevel;
                     subresource.mipLevel = tiledTextureCoordinate.mipLevel;
-					subresource.aspectMask = textureAspectFlags;
+					subresource.aspectMask = textureAspectFlags; // Required for sparse binding
 
                     vk::Offset3D offset3D;
-                    offset3D.x = tiledTextureCoordinate.x;
-                    offset3D.y = tiledTextureCoordinate.y;
-                    offset3D.z = tiledTextureCoordinate.z;
+                    offset3D.x = tiledTextureCoordinate.x * tileWidth;
+                    offset3D.y = tiledTextureCoordinate.y * tileHeight;
+                    offset3D.z = tiledTextureCoordinate.z * tileHeight;
 
                     vk::Extent3D extent3D;
-                    extent3D.width = tiledTextureRegion.width;
-                    extent3D.height = tiledTextureRegion.height;
-                    extent3D.depth = tiledTextureRegion.depth;
+                    extent3D.width = tiledTextureRegion.width * tileWidth;
+                    extent3D.height = tiledTextureRegion.height * tileHeight;
+                    extent3D.depth = tiledTextureRegion.depth * tileDepth;
 
                     sparseImageMemoryBinds.push_back(vk::SparseImageMemoryBind()
                         .setSubresource(subresource)

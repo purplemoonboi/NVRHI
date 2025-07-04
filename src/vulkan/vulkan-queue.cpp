@@ -25,6 +25,7 @@
 
 namespace nvrhi::vulkan
 {
+    extern vk::ImageAspectFlags guessImageAspectFlags(vk::Format format);
 
     TrackedCommandBuffer::~TrackedCommandBuffer()
     {
@@ -190,6 +191,8 @@ namespace nvrhi::vulkan
         std::vector<vk::SparseImageMemoryBind> sparseImageMemoryBinds;
         std::vector<vk::SparseMemoryBind> sparseMemoryBinds;
 
+		vk::ImageAspectFlags textureAspectFlags = guessImageAspectFlags(texture->imageInfo.format);
+
         for (size_t i = 0; i < numTileMappings; i++)
         {
             uint32_t numRegions = tileMappings[i].numTextureRegions;
@@ -214,6 +217,7 @@ namespace nvrhi::vulkan
                     vk::ImageSubresource subresource = {};
                     subresource.arrayLayer = tiledTextureCoordinate.arrayLevel;
                     subresource.mipLevel = tiledTextureCoordinate.mipLevel;
+					subresource.aspectMask = textureAspectFlags;
 
                     vk::Offset3D offset3D;
                     offset3D.x = tiledTextureCoordinate.x;

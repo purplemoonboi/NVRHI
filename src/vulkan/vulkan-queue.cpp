@@ -199,7 +199,12 @@ namespace nvrhi::vulkan
 		uint32_t tileHeight = 1;
 		uint32_t tileDepth = 1;
 
+        // Mip tail info, required for resource offset
+        uint32_t imageMipTailOffset = 0;
+        uint32_t imageMipTailStride = 1;
+
         std::vector<vk::SparseImageFormatProperties> formatProperties = m_Context.physicalDevice.getSparseImageFormatProperties(imageInfo.format, imageInfo.imageType, imageInfo.samples, imageInfo.usage, imageInfo.tiling);
+		std::vector<vk::SparseImageMemoryRequirements> memoryRequirements = m_Context.device.getImageSparseMemoryRequirements(texture->image);
 
 		if (!formatProperties.empty())
 		{
@@ -207,6 +212,12 @@ namespace nvrhi::vulkan
 			tileHeight = formatProperties[0].imageGranularity.height;
 			tileDepth = formatProperties[0].imageGranularity.depth;
 		}
+
+        if (!memoryRequirements.empty())
+        {
+			imageMipTailOffset = memoryRequirements[0].imageMipTailOffset;
+			imageMipTailStride = memoryRequirements[0].imageMipTailStride;
+        }
 
         for (size_t i = 0; i < numTileMappings; i++)
         {
@@ -222,7 +233,7 @@ namespace nvrhi::vulkan
                 if (tiledTextureRegion.tilesNum)
                 {
                     sparseMemoryBinds.push_back(vk::SparseMemoryBind()
-                        .setResourceOffset(0)
+                        .setResourceOffset(imageMipTailOffset + tiledTextureCoordinate.arrayLevel * imageMipTailOffset)
                         .setSize(tiledTextureRegion.tilesNum * texture->tileByteSize)
                         .setMemory(deviceMemory)
                         .setMemoryOffset(deviceMemory ? tileMappings[i].byteOffsets[j] : 0));

@@ -1,0 +1,9 @@
+﻿  aftermath.cpp
+  dxgi-format.cpp
+  format-info.cpp
+  misc.cpp
+  state-tracking.cpp
+  utils.cpp
+  validation-commandlist.cpp
+  validation-device.cpp
+LINK : fatal error LNK1181: cannot open input file 'Vulkan-Headers.lib'

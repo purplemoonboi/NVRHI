@@ -1,0 +1,24 @@
+﻿  aftermath.cpp
+  dxgi-format.cpp
+  format-info.cpp
+  misc.cpp
+  state-tracking.cpp
+  utils.cpp
+  d3d12-buffer.cpp
+  d3d12-commandlist.cpp
+  d3d12-compute.cpp
+  d3d12-constants.cpp
+  d3d12-descriptor-heap.cpp
+  d3d12-device.cpp
+  d3d12-graphics.cpp
+  d3d12-meshlets.cpp
+  d3d12-queries.cpp
+  d3d12-raytracing.cpp
+  d3d12-resource-bindings.cpp
+  d3d12-shader.cpp
+  d3d12-state-tracking.cpp
+  d3d12-texture.cpp
+  d3d12-upload.cpp
+  validation-commandlist.cpp
+  validation-device.cpp
+  nvrhi_d3d12.vcxproj -> D:\Foundation\Foundation-Engine\Foundation\vendor\nvrhi\bin\Debug\nvrhi_d3d12.lib
